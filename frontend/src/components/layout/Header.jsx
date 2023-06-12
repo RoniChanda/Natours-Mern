@@ -37,11 +37,7 @@ export default function Header() {
               Log out
             </button>
             <Link to="/me" className="nav__el">
-              <img
-                src={`${import.meta.env.VITE_IMAGE_URL}/users/${user.photo}`}
-                alt={user.name}
-                className="nav__user-img"
-              />
+              <img src={user.photo} alt={user.name} className="nav__user-img" />
               <span>Hi, {user.name.split(" ")[0]}!</span>
             </Link>
           </Fragment>

@@ -1,16 +1,11 @@
 const multer = require("multer");
 const sharp = require("sharp");
+const cloudinary = require("cloudinary").v2;
+
 const AppError = require("../utils/appError");
 const catchAsync = require("../utils/catchAsync");
 
-// Configuring Multer
-// const multerStorage = multer.diskStorage({
-//   destination: (req, file, cb) => cb(null, "public/img/users"),
-//   filename: (req, file, cb) => {
-//     const ext = file.mimetype.split("/")[1];
-//     cb(null, ` user-${req.user.id}-${Date.now()}.${ext}`);
-//   },
-// });
+// Multer
 const multerStorage = multer.memoryStorage();
 
 const multerFilter = (req, file, cb) => {
@@ -23,6 +18,32 @@ const multerFilter = (req, file, cb) => {
 
 const upload = multer({ storage: multerStorage, fileFilter: multerFilter });
 
+// cloudinary
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
+
+// ******************************* cloudinary Upload ************************************
+const cloudinaryUpload = async (buffer, filename, next, type) =>
+  new Promise((resolve) => {
+    cloudinary.uploader
+      .upload_stream(
+        {
+          folder: `natours-${type}`,
+          public_id: filename,
+        },
+        (error, result) => {
+          if (error) {
+            return next(new AppError("Error uploading image", 500));
+          }
+          resolve(result.secure_url);
+        }
+      )
+      .end(buffer);
+  });
+
 // *******************************  Upload user photo ************************************
 exports.uploadUserPhoto = upload.single("photo");
 
@@ -30,13 +51,18 @@ exports.uploadUserPhoto = upload.single("photo");
 exports.resizeUserPhoto = catchAsync(async (req, res, next) => {
   if (req.file?.fieldname !== "photo") return next();
 
-  req.file.filename = `user-${req.user.id}-${Date.now()}.jpeg`;
-
-  await sharp(req.file.buffer)
+  const resizedImageBuffer = await sharp(req.file.buffer)
     .resize(500, 500)
     .toFormat("jpeg")
     .jpeg({ quality: 90 })
-    .toFile(`public/img/users/${req.file.filename}`);
+    .toBuffer();
+
+  req.photo = await cloudinaryUpload(
+    resizedImageBuffer,
+    `user-${req.user.id}-${Date.now()}`,
+    next,
+    "users"
+  );
 
   next();
 });
@@ -52,27 +78,37 @@ exports.resizeTourPhotos = catchAsync(async (req, res, next) => {
   if (!req.files.imageCover || !req.files.images) return next();
 
   // Cover Image resizing
-  req.body.imageCover = `tour-${req.params.id}-${Date.now()}-cover.jpeg`;
-  await sharp(req.files.imageCover[0].buffer)
+  const resizedImageCoverBuffer = await sharp(req.files.imageCover[0].buffer)
     .resize(2000, 1333)
     .toFormat("jpeg")
     .jpeg({ quality: 90 })
-    .toFile(`public/img/tours/${req.body.imageCover}`);
+    .toBuffer();
+
+  req.body.imageCover = await cloudinaryUpload(
+    resizedImageCoverBuffer,
+    `tour-${req.params.id}-${Date.now()}-cover`,
+    next,
+    "tours"
+  );
 
   // Tour images resizing
   req.body.images = [];
-
   await Promise.all(
     req.files.images.map(async (file, index) => {
-      const fileName = `tour-${req.params.id}-${Date.now()}-${index + 1}.jpeg`;
-
-      await sharp(file.buffer)
+      const image = await sharp(file.buffer)
         .resize(2000, 1333)
         .toFormat("jpeg")
         .jpeg({ quality: 90 })
-        .toFile(`public/img/tours/${fileName}`);
+        .toBuffer();
 
-      req.body.images.push(fileName);
+      req.body.images.push(
+        await cloudinaryUpload(
+          image,
+          `tour-${req.params.id}-${Date.now()}-${index + 1}`,
+          next,
+          "tours"
+        )
+      );
     })
   );
 

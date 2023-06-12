@@ -43,12 +43,12 @@ export default function TourCta({ pictures, duration, tourId }) {
         </div>
         <img
           className="cta__img cta__img--1"
-          src={`${import.meta.env.VITE_IMAGE_URL}/tours/${pictures[1]}`}
+          src={pictures[1]}
           alt="Tour-pic-1"
         />
         <img
           className="cta__img cta__img--2"
-          src={`${import.meta.env.VITE_IMAGE_URL}/tours/${pictures[2]}`}
+          src={pictures[2]}
           alt="Tour-pic-2"
         />
         <div className="cta__content">

@@ -9,7 +9,7 @@ export default function OverviewBoxItem({ icon, photo, label, text }) {
       {photo && (
         <img
           className="overview-box__img"
-          src={`${import.meta.env.VITE_IMAGE_URL}/users/${photo}`}
+          src={photo}
           alt={text}
         />
       )}

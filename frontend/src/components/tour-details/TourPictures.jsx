@@ -5,7 +5,7 @@ export default function TourPictures({ pictures, name }) {
         <div key={index} className="picture-box">
           <img
             className={`picture-box__img picture-box__img--${index + 1}`}
-            src={`${import.meta.env.VITE_IMAGE_URL}/tours/${pic}`}
+            src={pic}
             alt={`${name} ${index + 1}`}
           />
         </div>

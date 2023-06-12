@@ -86,11 +86,7 @@ export default function DetailsForm({ name, email, photo }) {
       />
 
       <div className="form__group form__photo-upload">
-        <img
-          className="form__user-photo"
-          src={`${import.meta.env.VITE_IMAGE_URL}/users/${photo}`}
-          alt="User photo"
-        />
+        <img className="form__user-photo" src={photo} alt="User photo" />
         <input
           className="form__upload"
           name="photo"

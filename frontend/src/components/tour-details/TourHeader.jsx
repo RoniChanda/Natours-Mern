@@ -8,11 +8,7 @@ export default function TourHeader({
     <section className="section-header">
       <div className="header__hero">
         <div className="header__hero-overlay">&nbsp;</div>
-        <img
-          src={`${import.meta.env.VITE_IMAGE_URL}/tours/${imageCover}`}
-          alt={name}
-          className="header__hero-img"
-        />
+        <img src={imageCover} alt={name} className="header__hero-img" />
       </div>
       <div className="heading-box">
         <h1 className="heading-primary">

@@ -48,6 +48,8 @@ router
   .patch(
     authMiddleware.protect,
     authMiddleware.restrictTo("admin", "lead-guide"),
+    uploadMiddleware.uploadTourPhotos,
+    uploadMiddleware.resizeTourPhotos,
     tourController.updateTourById
   )
   .delete(

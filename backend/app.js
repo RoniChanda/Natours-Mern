@@ -7,7 +7,7 @@ const xss = require("xss-clean");
 const hpp = require("hpp");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
-const path = require("path");
+// const path = require("path");
 const compression = require("compression");
 
 const tourRoutes = require("./routes/tourRoutes");
@@ -23,11 +23,19 @@ const app = express();
 
 // ******************************* Global Middlewares ************************************
 // Implement cors
-app.use(cors({ origin: process.env.FRONTEND_URL, credentials: true }));
+app.use(
+  cors({
+    origin:
+      process.env.NODE_ENV === "development"
+        ? "http://localhost:5173"
+        : process.env.FRONTEND_URL,
+    credentials: true,
+  })
+);
 app.options("*", cors());
 
 // Serving static files
-app.use(express.static(path.join(__dirname, "public")));
+// app.use(express.static(path.join(__dirname, "public")));
 
 // set security HTTP headers
 app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" }));

@@ -4,7 +4,7 @@ export default function ReviewsCard({ review }) {
       <div className="reviews__avatar">
         <img
           className="reviews__avatar-img"
-          src={`${import.meta.env.VITE_IMAGE_URL}/users/${review.user.photo}`}
+          src={review.user.photo}
           alt={review.user.name}
         />
         <h6 className="reviews__user">{review.user.name}</h6>
