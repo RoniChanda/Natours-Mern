@@ -4,7 +4,8 @@
   "description": "Natours tour app backend",
   "main": "app.js",
   "scripts": {
-    "start": "nodemon server.js",
+    "start": "node server.js",
+    "start:dev": "nodemon server.js",
     "start:prod": "SET NODE_ENV=production&nodemon server.js",
     "data:import": "node seeder.js --import",
     "data:delete": "node seeder.js --delete",
