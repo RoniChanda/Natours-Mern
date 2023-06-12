@@ -74,7 +74,11 @@ exports.login = catchAsync(async (req, res, next) => {
 
 // ******************************* Logout User ************************************
 exports.logout = (req, res, next) => {
-  res.clearCookie("jwt");
+  // res.clearCookie("jwt");
+  res.cookie("jwt", "loggedout", {
+    expires: new Date(Date.now() + 10 * 1000),
+    httpOnly: true,
+  });
   res.status(200).json({ status: "SUCCESS" });
 };
 
