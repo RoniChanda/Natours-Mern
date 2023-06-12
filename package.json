@@ -1,0 +1,15 @@
+{
+  "name": "natours-mern",
+  "version": "1.0.0",
+  "description": "Natours tour app",
+  "main": "index.js",
+  "scripts": {
+    "start": "concurrently \"cd backend && npm start\" \"cd frontend && npm run dev\"",
+    "start:prod": "concurrently \"cd backend && npm run start:prod\" \"cd frontend && npm run dev\""
+  },
+  "author": "Supratim Chanda",
+  "license": "ISC",
+  "devDependencies": {
+    "concurrently": "^8.1.0"
+  }
+}
