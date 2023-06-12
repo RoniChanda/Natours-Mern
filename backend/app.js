@@ -23,7 +23,7 @@ const app = express();
 
 // ******************************* Global Middlewares ************************************
 // Implement cors
-app.use(cors({ origin: "http://localhost:5173", credentials: true }));
+app.use(cors({ credentials: true }));
 app.options("*", cors());
 
 // Serving static files
